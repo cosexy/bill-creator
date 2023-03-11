@@ -1,0 +1,425 @@
+"""Exposes a URL that specifies the behavior of this scalar."""
+directive @specifiedBy(
+  """The URL that specifies the behavior of this scalar."""
+  url: String!
+) on SCALAR
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """The variable name to export this field as."""
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """Specify the store key."""
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+input AdminGetBankFilter {
+  user: ID!
+}
+
+input AdminGetLogbooksFilter {
+  status: [LOGBOOK_STATUS!] = [PENDING, APPROVED, REJECTED]
+  type: [LOGBOOK_TYPE!] = [ADD, SUBTRACT]
+  user: ID
+}
+
+input AdminRemoveUserInput {
+  user: ID!
+}
+
+input AdminUpdateUserInput {
+  avatar: String
+  balance: Float
+  collaborator: ID
+  name: String
+  role: UserRole
+  user: ID!
+  withdrawNote: String
+  withdrawable: Boolean
+}
+
+type Bank {
+  account: String!
+  bank: String!
+  createdAt: Float!
+  id: ID!
+  name: String!
+  updatedAt: Float!
+  user: User!
+}
+
+type Collaborator {
+  clients: [User!]!
+  createdAt: Float!
+  fanpage: String!
+  id: ID!
+  name: String!
+  status: COLLABORATOR_STATUS!
+  updatedAt: Float!
+}
+
+enum COLLABORATOR_STATUS {
+  ACTIVE
+  FULL
+  INACTIVE
+}
+
+input CreateBankInput {
+  account: String!
+  bank: String!
+  name: String!
+}
+
+input CreateCollaboratorInput {
+  fanpage: String!
+  name: String!
+}
+
+input CreateInfoInput {
+  address: String!
+  born: [Float!]!
+  cccd: String!
+  education: String!
+  income: String!
+  job: String!
+  marriage: String!
+  name: String!
+  purpose: String!
+}
+
+input CreateLanguageInput {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+input CreateLoanInput {
+  amount: Float!
+  interest: Float!
+  months: Int!
+}
+
+input CreateLogbookInput {
+  amount: Float!
+  note: String = ""
+  user: ID!
+}
+
+input CreateWithdrawInput {
+  amount: Float
+}
+
+input DeleteLogbookInput {
+  id: ID!
+}
+
+input GetBankFilter {
+  id: ID!
+}
+
+input GetCollaboratorFilter {
+  id: ID!
+}
+
+input GetInfoFilter {
+  id: ID!
+}
+
+input GetLoanFilter {
+  user: ID!
+}
+
+input GetUserFilter {
+  id: ID!
+}
+
+input GetWithdrawsFilter {
+  user: ID!
+}
+
+type Identity {
+  avatar: String!
+  back: String!
+  createdAt: Float!
+  front: String!
+  id: ID!
+  updatedAt: Float!
+  user: User!
+}
+
+type Info {
+  address: String!
+  born: [Float!]!
+  cccd: String!
+  createdAt: Float!
+  education: String!
+  id: ID!
+  income: String!
+  job: String!
+  marriage: String!
+  name: String!
+  purpose: String!
+  updatedAt: Float!
+  user: User!
+}
+
+type Language {
+  """Example field (placeholder)"""
+  exampleField: Int!
+}
+
+type Loan {
+  """Số Tiền Vay"""
+  amount: Float!
+  createdAt: Float!
+  id: ID!
+
+  """Lãi xuất"""
+  interest: Float!
+
+  """Thời Gian Vay"""
+  months: Int!
+
+  """Image chữ ký"""
+  signature: String!
+
+  """Trạng thái khoản vay"""
+  status: LoanStatus!
+  updatedAt: Float!
+  user: User!
+}
+
+enum LoanStatus {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+type Logbook {
+  amount: Float!
+  createdAt: Float!
+  id: ID!
+  note: String
+  updatedAt: Float!
+  user: User!
+}
+
+enum LOGBOOK_STATUS {
+  APPROVED
+  PENDING
+  REJECTED
+}
+
+enum LOGBOOK_TYPE {
+  ADD
+  SUBTRACT
+}
+
+type Mutation {
+  adminCreateLogbook(input: CreateLogbookInput!): Logbook!
+  adminDeleteLogbook(input: DeleteLogbookInput!): Logbook!
+  adminRemoveUser(input: AdminRemoveUserInput!): User!
+  adminUpdateBank(input: UpdateBankInput!): Bank!
+  adminUpdateInfo(input: UpdateInfoInput!): Info!
+  adminUpdateLoan(input: UpdateLoanInput!): Loan!
+  adminUpdateLogbook(input: UpdateLogbookInput!): Logbook!
+  adminUpdatePassword(input: UpdatePasswordUserInput!): User!
+  adminUpdateUser(input: AdminUpdateUserInput!): User!
+  createBank(input: CreateBankInput!): Bank!
+  createCollaborator(input: CreateCollaboratorInput!): Collaborator!
+  createInfo(input: CreateInfoInput!): Info!
+  createLanguage(createLanguageInput: CreateLanguageInput!): Language!
+  createLoan(input: CreateLoanInput!): Loan!
+  createWithdraw(input: CreateWithdrawInput!): Withdraw!
+  removeLanguage(id: Int!): Language!
+  signIn(input: SignInInput!): String!
+  signLoan(input: SignLoanInput!): Loan!
+  signUp(input: SignUpInput!): String!
+  toggleWithdraw(filter: ToggleWithdrawInput!): Withdraw!
+  updateCollaborator(input: UpdateCollaboratorInput!): Collaborator!
+  updateIdentity(input: UpdateIdentityInput!): Identity!
+  updateLanguage(updateLanguageInput: UpdateLanguageInput!): Language!
+}
+
+type Notify {
+  """Thông báo lỗi hay không"""
+  error: Boolean!
+
+  """Nội dung tin nhắn"""
+  msg: String!
+
+  """Thành viên hiện tại"""
+  user: User!
+}
+
+type Query {
+  adminBank(filter: GetBankFilter!): Bank
+  adminIdentity(filter: AdminGetBankFilter!): Identity
+  adminInfo(filter: GetInfoFilter!): Info
+  adminLoan(filter: GetLoanFilter!): Loan
+  adminLoans: [Loan!]!
+  adminLogbooks(filter: AdminGetLogbooksFilter!): [Logbook!]!
+  adminRangeUsers(filter: RangeUsersFilter!): [User!]!
+  adminUser(filter: GetUserFilter!): User!
+  bank: Bank
+  collaborator(filter: GetCollaboratorFilter!): Collaborator!
+  collaborators: [Collaborator!]!
+  identity: Identity
+  info: Info
+  language(id: Int!): Language!
+  loan: Loan
+  logbooks: [Logbook!]!
+  me: User!
+  users: [User!]!
+  withdraws: [Withdraw!]!
+  withdrawsAdmin(filter: GetWithdrawsFilter!): [Withdraw!]!
+}
+
+input RangeUsersFilter {
+  end: Float!
+  start: Float!
+}
+
+input SignInInput {
+  email: String!
+  password: String!
+}
+
+input SignLoanInput {
+  signature: String!
+}
+
+input SignUpInput {
+  email: String!
+  password: String!
+}
+
+type Subscription {
+  """Nhận thông báo"""
+  subNotify: Notify!
+}
+
+input ToggleWithdrawInput {
+  id: ID!
+  status: WithDrawStatus!
+}
+
+input UpdateBankInput {
+  account: String!
+  bank: String!
+  id: ID!
+  name: String!
+}
+
+input UpdateCollaboratorInput {
+  fanpage: String
+  id: ID!
+  name: String
+  status: COLLABORATOR_STATUS
+}
+
+input UpdateIdentityInput {
+  avatar: String!
+  back: String!
+  front: String!
+}
+
+input UpdateInfoInput {
+  address: String
+  born: [Float!]
+  cccd: String
+  education: String
+  income: String
+  job: String
+  marriage: String
+  name: String
+  purpose: String
+  user: ID!
+}
+
+input UpdateLanguageInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input UpdateLoanInput {
+  amount: Float
+  interest: Float
+  months: Int
+  signature: String
+  status: LoanStatus
+  user: ID!
+}
+
+input UpdateLogbookInput {
+  amount: Float
+  id: ID!
+  note: String = ""
+  user: ID
+}
+
+input UpdatePasswordUserInput {
+  password: String!
+  user: ID!
+}
+
+type User {
+  balance: Float!
+  bank: Bank
+  collaborator: Collaborator
+  createdAt: Float!
+  email: String!
+  id: ID!
+  identity: Identity
+  info: Info
+  loan: Loan
+  role: UserRole!
+  withdrawNote: String
+  withdrawable: Boolean!
+}
+
+enum UserRole {
+  ADMIN
+  SP_ADMIN
+  USER
+}
+
+type Withdraw {
+  amount: Float!
+  createdAt: Float!
+  id: ID!
+  status: WithDrawStatus!
+  updatedAt: Float!
+  user: User!
+}
+
+enum WithDrawStatus {
+  APPROVED
+  PENDING
+  REJECTED
+}
