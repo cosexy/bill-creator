@@ -37,11 +37,6 @@ export default defineNuxtConfig({
             }
         }
     },
-    apollo: {
-        clients: {
-            default: './apollo/index.ts'
-        }
-    },
     runtimeConfig: {
         // Private config that is only available on the server
         apiSecret: process.env.NUXT_API_SECRET,
