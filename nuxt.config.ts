@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     modules: [
         '@nuxtjs/tailwindcss',
-        '@nuxtjs/apollo',
+        // '@nuxtjs/apollo',
         '@vueuse/nuxt',
         // '@nuxt/devtools',
         [
