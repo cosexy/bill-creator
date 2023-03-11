@@ -5,6 +5,7 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "stop": "pm2 stop bill-credit",
     "postinstall": "nuxt prepare",
     "apollo:pull": "npx apollo client:download-schema --endpoint=http://localhost:3001/graphql schema.graphql",
     "apollo:codegen": "npx apollo codegen:generate --localSchemaFile=schema.graphql --target=typescript --tagName=gql --includes=./apollo/**/*.ts --globalTypesFile=./apollo/__generated__/serverTypes.ts"
