@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'finance-studio',
+      name: 'http://billcredit.buzz/',
       exec_mode: 'cluster',
       instances: 'max', // Or a number of instances
       script: 'npm',
