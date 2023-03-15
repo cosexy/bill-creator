@@ -12,4 +12,5 @@ export interface BankConfig {
 export interface BankCreatorProps {
     image: string[]
     config: BankConfig
+    [key: string]: any
 }

@@ -17,13 +17,67 @@
         </button>
       </div>
 
-      <n-form class="max-w-[400px]">
+      <n-form class="max-w-[500px]">
 
         <n-form-item label="Trạng thái">
           <n-switch v-model:value="isSuccess" />
           <span class="ml-4">
             Thành công
           </span>
+        </n-form-item>
+
+        <n-form-item label="Sóng">
+          <div class="_status_btn" :class="activeBank">
+
+            <button
+                v-for="item in statusBarResource.network"
+                :key="item.value"
+                class="cursor-pointer transition"
+                :class="{
+                    'opacity-50': statusBar.network !== item.value,
+                  }"
+                @click="statusBar.network = item.value"
+            >
+              <img :src="item.value" alt="" />
+            </button>
+
+          </div>
+        </n-form-item>
+
+        <n-form-item label="Wifi">
+          <div class="_status_btn" :class="activeBank">
+
+            <button
+                v-for="item in statusBarResource.wifi"
+                :key="item.value"
+                class="cursor-pointer transition"
+                :class="{
+                    'opacity-50': statusBar.wifi !== item.value,
+                  }"
+                @click="statusBar.wifi = item.value"
+            >
+              <img :src="item.value" alt="" />
+            </button>
+
+          </div>
+        </n-form-item>
+
+        <n-form-item label="Pin">
+          <div class="_status_btn" :class="activeBank">
+
+            <button
+                v-for="item in statusBarResource.battery"
+                :key="item.value"
+                class="cursor-pointer transition"
+                :class="{
+                    'opacity-50': statusBar.battery !== item.value,
+                  }"
+                @click="statusBar.battery = item.value"
+            >
+              <img :src="item.value" alt="" />
+            </button>
+
+          </div>
         </n-form-item>
 
         <n-form-item label="Số tiền">
@@ -77,7 +131,18 @@
              'text-black': activeBank === 'tech',
              [activeBank]: true
           }"
-      />
+      >
+
+        <div class="status_right">
+          <img
+              v-for="item in Object.entries(statusBar)"
+              :class="item[0]"
+              :src="item[1]"
+              alt=""
+          />
+        </div>
+
+      </creator-bill>
     </div>
   </div>
 </template>
@@ -87,7 +152,10 @@ import { toBlob } from 'html-to-image'
 import download from 'downloadjs'
 import {BankCreatorProps} from "~/entities/creator.entity"
 import {IBank} from "~/entities/bank.entity";
-import {SelectMixedOption} from "naive-ui/es/select/src/interface";
+import {SelectMixedOption} from "naive-ui/es/select/src/interface"
+
+const lists = ref(['vcb', 'tech'])
+const activeBank = ref('vcb')
 
 const res = await useFetch<{
   data: IBank[]
@@ -102,6 +170,41 @@ const bankOptions = computed<SelectMixedOption[]>(() => {
     }
   })
 })
+
+const statusBar  = reactive({
+  wifi: '/images/vcb/wifi1.png',
+  network: '/images/vcb/bt1.png',
+  battery: '/images/vcb/btr1.png',
+})
+
+const statusBarResource = computed(() => ({
+  network: Array(4).fill('').map((_, index) => ({
+    value: `/images/${activeBank.value}/bt${index + 1}.png`,
+    label: `Sóng ${index + 1} Vạch`,
+  })),
+  wifi: Array(3).fill('').map((_, index) => ({
+    value: `/images/${activeBank.value}/wifi${index + 1}.png`,
+    label: `Wifi ${index + 1} Vạch`,
+  })),
+  battery: [
+    {
+      label: 'Đang sạc',
+      value: `/images/${activeBank.value}/btr1.png`
+    },
+    {
+      label: 'Pin yếu',
+      value: `/images/${activeBank.value}/btr2.png`
+    },
+    {
+      label: 'Pin 90%',
+      value: `/images/${activeBank.value}/btr3.png`
+    },
+    {
+      label: 'Nguồn điện thấp',
+      value: `/images/${activeBank.value}/btr4.png`
+    }
+  ]
+}))
 
 const banks = reactive<Record<string, BankCreatorProps>>({
   vcb: {
@@ -184,7 +287,7 @@ const banks = reactive<Record<string, BankCreatorProps>>({
           height: '50px'
         },
       }
-    },
+    }
   },
   tech: {
     image: ['/images/banks/tech.jpg', '/images/banks/tech2.jpg'],
@@ -260,14 +363,19 @@ const banks = reactive<Record<string, BankCreatorProps>>({
           fontWeight: 500
         },
       }
-    },
+    }
   }
 })
 
 const currentBank = computed(() => vnBanks.value.find((item: any) => item.name === banks[activeBank.value].config.bank.value))
 
-const lists = ref(['vcb', 'tech'])
-const activeBank = ref('vcb')
+watch(activeBank, (val) => {
+  if(val) {
+    statusBar.network = statusBarResource.value.network[0].value
+    statusBar.battery = statusBarResource.value.battery[0].value
+    statusBar.wifi = statusBarResource.value.wifi[0].value
+  }
+})
 const { $dayjs, $moneyFormat } = useNuxtApp()
 
 const config = computed(() => {
@@ -371,5 +479,57 @@ const exportImage = async () => {
   left: 34px;
   font-size: 11px;
   font-weight: 600;
+}
+
+._status_btn {
+  display: flex;
+}
+
+._status_btn > button img {
+  height: 20px;
+}
+
+._status_btn > button {
+  padding: 10px;
+}
+
+._status_btn.vcb > button {
+  background: #0d1e25;
+}
+
+._status_btn.vcb > button {
+  background: #0d1e25;
+  padding: 10px;
+  border-radius: 15px;
+  margin-right: 15px;
+}
+
+.status_right {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  top: 10px;
+  right: 14px;
+}
+
+.status_right > img {
+  height: 9px;
+}
+
+.status_right ._bt {
+  height: 8px;
+}
+
+.status_right > .network {
+  margin: 0 3px;
+}
+
+._bill_creator.tech .status_right {
+  right: 16px;
+}
+
+._bill_creator.tech .status_right > img {
+  height: 8px;
 }
 </style>

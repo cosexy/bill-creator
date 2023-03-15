@@ -4,7 +4,6 @@
     <div class="absolute top-[7px] text-[10px] left-[24px] _clock">
       {{ $dayjs().format('HH:mm') }}
     </div>
-
     <div
         class="absolute flex items-center"
         v-for="(item, key) in config"
@@ -21,10 +20,12 @@
 <script lang="ts" setup>
 import {BankConfig} from "~/entities/creator.entity";
 
-const props = defineProps<{
+defineProps<{
   image: string
   config: BankConfig
 }>()
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
