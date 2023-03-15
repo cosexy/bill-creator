@@ -172,8 +172,8 @@ const bankOptions = computed<SelectMixedOption[]>(() => {
 })
 
 const statusBar  = reactive({
-  wifi: '/images/vcb/wifi1.png',
   network: '/images/vcb/bt1.png',
+  wifi: '/images/vcb/wifi1.png',
   battery: '/images/vcb/btr1.png',
 })
 
@@ -521,7 +521,7 @@ const exportImage = async () => {
   height: 8px;
 }
 
-.status_right > .network {
+.status_right > .wifi {
   margin: 0 3px;
 }
 
